@@ -1,4 +1,5 @@
-const Joi = require('joi');
+import Joi from 'joi';
+import logger from '../utils/logger.js';
 
 // Array que armazena as tarefas em memória
 let tasks = [
@@ -48,12 +49,12 @@ const updateTaskSchema = Joi.object({
 });
 
 // Retorna todas as tarefas
-const getAllTasks = (req, res) => {
+export function getAllTasks(req, res) {
   res.json(tasks);
-};
+}
 
 // Cria uma nova tarefa
-const createTask = (req, res) => {
+export function createTask(req, res) {
   const { error, value } = createTaskSchema.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
   const newTask = {
@@ -63,11 +64,12 @@ const createTask = (req, res) => {
     completed: false,
   };
   tasks.push(newTask);
+  logger.info(`Tarefa criada: ${JSON.stringify(newTask)}`);
   res.status(201).json(newTask);
-};
+}
 
 // Atualiza uma tarefa (title, description, completed)
-const updateTask = (req, res) => {
+export function updateTask(req, res) {
   const { id } = req.params;
   const { error, value } = updateTaskSchema.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
@@ -76,30 +78,32 @@ const updateTask = (req, res) => {
   if (value.title !== undefined) task.title = value.title;
   if (value.description !== undefined) task.description = value.description;
   if (value.completed !== undefined) task.completed = value.completed;
+  logger.info(`Tarefa atualizada: ${JSON.stringify(task)}`);
   res.json(task);
-};
+}
 
 // Remove uma tarefa pelo id
-const deleteTask = (req, res) => {
+export function deleteTask(req, res) {
   const { id } = req.params;
   const exists = tasks.some((t) => t.id === parseInt(id));
   if (!exists) return res.status(404).json({ error: 'Tarefa não encontrada.' });
   tasks = tasks.filter((t) => t.id !== parseInt(id));
+  logger.info(`Tarefa removida: id=${id}`);
   res.json({ message: 'Tarefa removida com sucesso.' });
-};
+}
 
 // Busca uma tarefa pelo id
-const getTaskById = (req, res) => {
+export function getTaskById(req, res) {
   const { id } = req.params;
   const task = tasks.find((t) => t.id === parseInt(id));
   if (!task) {
     return res.status(404).json({ error: 'Tarefa não encontrada.' });
   }
   res.json(task);
-};
+}
 
 // Função utilitária para resetar tarefas (usada nos testes)
-const resetTasks = () => {
+export function resetTasks() {
   tasks = [
     {
       id: 1,
@@ -127,13 +131,5 @@ const resetTasks = () => {
     },
   ];
   nextId = 5;
-};
-
-module.exports = {
-  getAllTasks,
-  createTask,
-  updateTask,
-  deleteTask,
-  getTaskById,
-  resetTasks,
-};
+  logger.info('Tarefas resetadas para o estado inicial.');
+}

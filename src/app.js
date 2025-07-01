@@ -1,18 +1,19 @@
 // Carrega variáveis de ambiente do arquivo .env
-require('dotenv').config();
+import 'dotenv/config';
 // Importa o framework Express
-const express = require('express');
+import express from 'express';
 // Importa o body-parser para lidar com JSON no corpo das requisições
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 // Importa o CORS para permitir requisições de outros domínios
-const cors = require('cors');
+import cors from 'cors';
 // Importa as rotas de tarefas
-const taskRoutes = require('./routes/taskRoutes');
+import taskRoutes from './routes/taskRoutes.js';
 // Importa JWT e bcrypt para autenticação
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const authMiddleware = require('./middleware/auth');
-const errorHandler = require('./middleware/errorHandler');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import authMiddleware from './middleware/auth.js';
+import errorHandler from './middleware/errorHandler.js';
+import logger from './utils/logger.js';
 
 // Cria uma instância do aplicativo Express
 const app = express();
@@ -49,15 +50,15 @@ app.post('/login', (req, res) => {
 app.use('/tasks', authMiddleware, taskRoutes);
 
 // Inicia o servidor apenas se este arquivo for executado diretamente
-if (require.main === module) {
+if (process.argv[1] === new URL(import.meta.url).pathname) {
   // Define a porta (usa a porta do ambiente ou 3000 por padrão)
   const PORT = process.env.PORT || 3000;
   // Inicia o servidor e exibe uma mensagem no console
-  app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  app.listen(PORT, () => logger.info(`Server is running on port ${PORT}`));
 }
 
 // Exporta o app para ser usado em outros arquivos (como nos testes)
-module.exports = app;
+export default app;
 
 // Middleware de tratamento global de erros (deve ser o último)
 app.use(errorHandler);

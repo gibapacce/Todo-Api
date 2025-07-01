@@ -1,16 +1,13 @@
-// Importa o Express
-const express = require('express');
-// Cria um roteador do Express
-const router = express.Router();
-
-// Importa as funções do controller de tarefas
-const {
+import express from 'express';
+import {
   getAllTasks,
   createTask,
   getTaskById,
   updateTask,
   deleteTask,
-} = require('../controllers/tasks');
+} from '../controllers/tasks.js';
+
+const router = express.Router();
 
 // Middleware para validar se o parâmetro id é um número
 function validateId(req, res, next) {
@@ -31,5 +28,4 @@ router.patch('/:id', validateId, updateTask);
 // Rota para deletar uma tarefa pelo id
 router.delete('/:id', validateId, deleteTask);
 
-// Exporta o roteador para ser usado no app principal
-module.exports = router;
+export default router;
