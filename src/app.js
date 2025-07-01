@@ -11,7 +11,7 @@ const taskRoutes = require("./routes/taskRoutes");
 // Importa JWT e bcrypt para autenticação
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const authMiddleware = require('./middlewares/auth');
+const authMiddleware = require('./middleware/auth');
 
 // Cria uma instância do aplicativo Express
 const app = express();
