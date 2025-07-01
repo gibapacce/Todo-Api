@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
   // Obtém o token do header Authorization (formato: Bearer <token>)
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: "Token não fornecido" });
+  if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
   try {
     // Usa variável de ambiente para o segredo do JWT
@@ -11,7 +11,8 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, jwtSecret);
     req.userId = decoded.id;
     next();
+    // eslint-disable-next-line no-unused-vars
   } catch (err) {
-    res.status(401).json({ error: "Token inválido" });
+    res.status(401).json({ error: 'Token inválido' });
   }
 };

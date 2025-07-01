@@ -1,17 +1,18 @@
 // Carrega variáveis de ambiente do arquivo .env
 require('dotenv').config();
 // Importa o framework Express
-const express = require("express");
+const express = require('express');
 // Importa o body-parser para lidar com JSON no corpo das requisições
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 // Importa o CORS para permitir requisições de outros domínios
-const cors = require("cors");
+const cors = require('cors');
 // Importa as rotas de tarefas
-const taskRoutes = require("./routes/taskRoutes");
+const taskRoutes = require('./routes/taskRoutes');
 // Importa JWT e bcrypt para autenticação
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const authMiddleware = require('./middleware/auth');
+const errorHandler = require('./middleware/errorHandler');
 
 // Cria uma instância do aplicativo Express
 const app = express();
@@ -31,12 +32,12 @@ app.post('/login', (req, res) => {
   const { username, password } = req.body;
   // Validação básica dos campos
   if (!username || !password) {
-    return res.status(400).json({ error: "Usuário e senha são obrigatórios" });
+    return res.status(400).json({ error: 'Usuário e senha são obrigatórios' });
   }
-  const user = users.find(u => u.username === username);
+  const user = users.find((u) => u.username === username);
   // Verifica se usuário existe e se a senha está correta
   if (!user || !bcrypt.compareSync(password, user.password)) {
-    return res.status(401).json({ error: "Credenciais inválidas" });
+    return res.status(401).json({ error: 'Credenciais inválidas' });
   }
   // Usa variável de ambiente para o segredo do JWT, ou valor padrão para desenvolvimento
   const jwtSecret = process.env.JWT_SECRET || 'SEGREDO_SUPER_SECRETO';
@@ -49,12 +50,14 @@ app.use('/tasks', authMiddleware, taskRoutes);
 
 // Inicia o servidor apenas se este arquivo for executado diretamente
 if (require.main === module) {
-    // Define a porta (usa a porta do ambiente ou 3000 por padrão)
-    const PORT = process.env.PORT || 3000;
-    // Inicia o servidor e exibe uma mensagem no console
-    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  // Define a porta (usa a porta do ambiente ou 3000 por padrão)
+  const PORT = process.env.PORT || 3000;
+  // Inicia o servidor e exibe uma mensagem no console
+  app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 }
 
 // Exporta o app para ser usado em outros arquivos (como nos testes)
 module.exports = app;
 
+// Middleware de tratamento global de erros (deve ser o último)
+app.use(errorHandler);

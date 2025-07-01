@@ -35,7 +35,7 @@ describe('Tasks API', () => {
     const res = await request(app)
       .post('/tasks')
       .set('Authorization', `Bearer ${token}`)
-      .send({ title: "Novo item", description: "Nova descrição" });
+      .send({ title: 'Novo item', description: 'Nova descrição' });
     expect(res.statusCode).toBe(201); // Espera status 201
     expect(res.body).toHaveProperty('id'); // Espera que a resposta tenha um id
     expect(res.body).toHaveProperty('description', 'Nova descrição'); // Espera que a resposta tenha a descrição correta
@@ -70,7 +70,11 @@ describe('Tasks API', () => {
     const res = await request(app)
       .patch('/tasks/1')
       .set('Authorization', `Bearer ${token}`)
-      .send({ title: "Atualizado", description: "Desc atualizada", completed: true });
+      .send({
+        title: 'Atualizado',
+        description: 'Desc atualizada',
+        completed: true,
+      });
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('title', 'Atualizado');
     expect(res.body).toHaveProperty('description', 'Desc atualizada');
@@ -81,7 +85,7 @@ describe('Tasks API', () => {
     const res = await request(app)
       .patch('/tasks/999')
       .set('Authorization', `Bearer ${token}`)
-      .send({ title: "Qualquer" });
+      .send({ title: 'Qualquer' });
     expect(res.statusCode).toBe(404);
     expect(res.body).toHaveProperty('error');
   });
