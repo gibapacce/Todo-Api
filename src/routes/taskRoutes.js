@@ -20,9 +20,9 @@ function validateId(req, res, next) {
     next();
 }
 
-// // Descomente para proteger as rotas com autenticação JWT
-// const auth = require('../middlewares/auth');
-// router.use(auth);
+// Ativa autenticação JWT em todas as rotas de tarefas
+const auth = require('../Middleware/auth');
+router.use(auth);
 
 // Rota para buscar todas as tarefas
 router.get("/", getAllTasks);

@@ -1,3 +1,5 @@
+// Carrega variáveis de ambiente do arquivo .env
+require('dotenv').config();
 // Importa o framework Express
 const express = require("express");
 // Importa o body-parser para lidar com JSON no corpo das requisições
