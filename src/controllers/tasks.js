@@ -26,6 +26,9 @@ let tasks = [
     },
 ];
 
+// Variável para controlar o próximo id único
+let nextId = 5;
+
 // Retorna todas as tarefas
 const getAllTasks = (req, res) => {
     res.json(tasks);
@@ -33,48 +36,80 @@ const getAllTasks = (req, res) => {
 
 // Cria uma nova tarefa
 const createTask = (req, res) => {
-    const { title } = req.body; // Pega o título do corpo da requisição
+    const { title, description = "" } = req.body; // Permite enviar description
     if (!title) {
-        // Se não tiver título, retorna erro 400
-        return res.status(400).json({ error: "Title is required" });
+        return res.status(400).json({ error: "O campo 'title' é obrigatório." });
     }
-    // Cria o objeto da nova tarefa
     const newTask = {
-        id: tasks.length + 1,
+        id: nextId++,
         title,
+        description,
         completed: false,
     };
-    tasks.push(newTask); // Adiciona a nova tarefa ao array
-    res.status(201).json(newTask); // Retorna a nova tarefa criada
+    tasks.push(newTask);
+    res.status(201).json(newTask);
 };
 
-// Atualiza o status de uma tarefa (concluída ou não)
+// Atualiza uma tarefa (title, description, completed)
 const updateTask = (req, res) => {
-  const { id } = req.params; // Pega o id da URL
-  const { completed } = req.body; // Pega o status do corpo da requisição
-  const task = tasks.find(t => t.id === parseInt(id)); // Busca a tarefa pelo id
-  if (!task) return res.status(404).json({ error: "Task not found" }); // Se não encontrar, retorna erro 404
-  task.completed = completed; // Atualiza o status
-  res.json(task); // Retorna a tarefa atualizada
+    const { id } = req.params;
+    const { title, description, completed } = req.body;
+    const task = tasks.find(t => t.id === parseInt(id));
+    if (!task) return res.status(404).json({ error: "Tarefa não encontrada." });
+    if (title !== undefined) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (completed !== undefined) task.completed = completed;
+    res.json(task);
 };
 
 // Remove uma tarefa pelo id
 const deleteTask = (req, res) => {
-  const { id } = req.params; // Pega o id da URL
-  tasks = tasks.filter(t => t.id !== parseInt(id)); // Remove a tarefa do array
-  res.sendStatus(204); // Retorna status 204 (sem conteúdo)
+    const { id } = req.params;
+    const exists = tasks.some(t => t.id === parseInt(id));
+    if (!exists) return res.status(404).json({ error: "Tarefa não encontrada." });
+    tasks = tasks.filter(t => t.id !== parseInt(id));
+    res.json({ message: "Tarefa removida com sucesso." });
 };
 
 // Busca uma tarefa pelo id
 const getTaskById = (req, res) => {
-    const { id } = req.params; // Pega o id da URL
-    const task = tasks.find(t => t.id === parseInt(id)); // Busca a tarefa pelo id
+    const { id } = req.params;
+    const task = tasks.find(t => t.id === parseInt(id));
     if (!task) {
-        // Se não encontrar, retorna erro 404
-        return res.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Tarefa não encontrada." });
     }
-    res.json(task); // Retorna a tarefa encontrada
+    res.json(task);
 };
 
-// Exporta todas as funções para serem usadas nas rotas
-module.exports = { getAllTasks, createTask, updateTask, deleteTask, getTaskById };
+// Função utilitária para resetar tarefas (usada nos testes)
+const resetTasks = () => {
+    tasks = [
+        {
+            id: 1,
+            title: "Task 1",
+            description: "Description 1",
+            completed: false,
+        },
+        {
+            id: 2,
+            title: "Task 2",
+            description: "Description 2",
+            completed: false,
+        },
+        {
+            id: 3,
+            title: "Task 3",
+            description: "Description 3",
+            completed: false,
+        },
+        {
+            id: 4,
+            title: "Task 4",
+            description: "Description 4",
+            completed: false,
+        },
+    ];
+    nextId = 5;
+};
+
+module.exports = { getAllTasks, createTask, updateTask, deleteTask, getTaskById, resetTasks };

@@ -9,6 +9,7 @@ const taskRoutes = require("./routes/taskRoutes");
 // Importa JWT e bcrypt para autenticação
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const authMiddleware = require('./middlewares/auth');
 
 // Cria uma instância do aplicativo Express
 const app = express();
@@ -42,7 +43,7 @@ app.post('/login', (req, res) => {
 });
 
 // Usa as rotas de tarefas para requisições que começam com /tasks
-app.use("/tasks", taskRoutes);
+app.use('/tasks', authMiddleware, taskRoutes);
 
 // Inicia o servidor apenas se este arquivo for executado diretamente
 if (require.main === module) {
