@@ -1,14 +1,35 @@
-# Todo API
+# Todo API Node.js
 
-API simples de tarefas (ToDo) feita com Node.js e Express.
+API RESTful para gerenciamento de tarefas (ToDo), desenvolvida com Node.js e Express. Inclui autenticação JWT, filtros, busca, paginação, testes automatizados e documentação.
 
-## Instalação
+## 🚀 Funcionalidades
+
+- Cadastro e login de usuários (mock)
+- Autenticação JWT para rotas protegidas
+- CRUD completo de tarefas
+- Filtros por status, busca por palavra-chave e paginação
+- Campos avançados: prioridade, data de criação e conclusão
+- Validação de dados com Joi
+- Logger customizado (Winston)
+- Testes automatizados (Jest + Supertest)
+- Documentação da API
+
+## 🛠️ Tecnologias
+
+- Node.js, Express
+- JWT (jsonwebtoken)
+- Joi (validação)
+- Winston (logger)
+- Jest & Supertest (testes)
+- Prettier & ESLint (padronização)
+
+## ⚙️ Instalação
 
 ```bash
 npm install
 ```
 
-## Variáveis de Ambiente
+## 🔐 Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 
@@ -16,33 +37,50 @@ Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 JWT_SECRET=SEGREDO_SUPER_SECRETO
 ```
 
-## Executando o servidor
+## ▶️ Executando o servidor
 
 ```bash
 npm start
 ```
-
 O servidor irá rodar na porta 3000 por padrão.
 
-## Autenticação
+## 🔑 Autenticação
 
-- Faça login em `/login` enviando `username` e `password` (veja usuários mockados no código).
+- Faça login em `/login` enviando `username` e `password` (veja usuários mockados no código ou use `/register`).
 - O endpoint retorna um token JWT.
 - Envie o token no header `Authorization` como `Bearer <token>` para acessar as rotas de `/tasks`.
 
-## Rotas principais
+## 📚 Principais Rotas
 
+- `POST /register` — cadastra novo usuário (username único)
 - `POST /login` — retorna um token JWT
-- `GET /tasks` — lista todas as tarefas (requer JWT)
-- `POST /tasks` — cria uma nova tarefa (requer JWT)
-- `GET /tasks/:id` — busca tarefa por id (requer JWT)
-- `PATCH /tasks/:id` — atualiza tarefa (requer JWT)
-- `DELETE /tasks/:id` — remove tarefa (requer JWT)
+- `POST /logout` — logout simulado (descartar token)
+- `GET /tasks` — lista tarefas (filtros: `completed`, `search`, `page`, `limit`)
+- `POST /tasks` — cria nova tarefa
+- `GET /tasks/:id` — busca tarefa por id
+- `PATCH /tasks/:id` — atualiza tarefa (parcial ou total)
+- `DELETE /tasks/:id` — remove tarefa
 
-## Testes
+## 🧪 Testes
 
 ```bash
 npm test
 ```
+Os testes cobrem casos de sucesso e erro para as rotas de tarefas, autenticação e validação.
 
-Os testes cobrem casos de sucesso e erro para as rotas de tarefas.
+## 📄 Documentação
+
+Veja o arquivo [`docs.md`](./docs.md) para detalhes completos das rotas, exemplos de payload e respostas.
+
+## 💻 Projeto no GitHub
+
+[https://github.com/gibapacce/todo-api-nodejs](https://github.com/gibapacce/todo-api-nodejs)
+
+## 👤 Autor
+
+Gilberto Pacce  
+[LinkedIn](https://www.linkedin.com/in/seu-linkedin) | [GitHub](https://github.com/gibapacce)
+
+---
+
+Sinta-se à vontade para contribuir ou sugerir melhorias!

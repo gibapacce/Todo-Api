@@ -27,7 +27,7 @@ describe('Tasks API', () => {
       .get('/tasks')
       .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200); // Espera status 200
-    expect(res.body).toBeInstanceOf(Array); // Espera um array como resposta
+    expect(res.body.data).toBeInstanceOf(Array); // Espera um array como resposta em data
   });
 
   // Testa se o POST /tasks cria uma nova tarefa
@@ -112,5 +112,63 @@ describe('Tasks API', () => {
       .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty('error');
+  });
+
+  // Testa se o PATCH /tasks/:id permite atualização parcial de apenas um campo
+  it('PATCH /tasks/:id → deve atualizar apenas o campo title (atualização parcial)', async () => {
+    const res = await request(app)
+      .patch('/tasks/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Só o título mudou' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('title', 'Só o título mudou');
+    // Os outros campos permanecem inalterados
+    expect(res.body).toHaveProperty('description', 'Description 1');
+    expect(res.body).toHaveProperty('completed', false);
+  });
+});
+
+// Testes extras para casos de erro e autenticação
+
+describe('Erros e autenticação', () => {
+  it('GET /tasks sem token deve retornar 401', async () => {
+    const res = await request(app).get('/tasks');
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('GET /tasks com token inválido deve retornar 401', async () => {
+    const res = await request(app)
+      .get('/tasks')
+      .set('Authorization', 'Bearer tokeninvalido');
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('POST /tasks com payload inválido deve retornar 400', async () => {
+    const res = await request(app)
+      .post('/tasks')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ description: 'Sem título' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('PATCH /tasks/:id com prioridade inválida deve retornar 400', async () => {
+    const res = await request(app)
+      .patch('/tasks/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ priority: 'urgente' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('GET /tasks com filtro inválido não deve quebrar', async () => {
+    const res = await request(app)
+      .get('/tasks?completed=talvez')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('data');
+    // Retorna todas as tarefas, pois completed não é booleano válido
   });
 });

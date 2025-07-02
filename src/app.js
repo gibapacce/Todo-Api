@@ -46,6 +46,35 @@ app.post('/login', (req, res) => {
   res.json({ token }); // Retorna token
 });
 
+// Rota de registro de usuário (simulada)
+app.post('/register', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Usuário e senha são obrigatórios' });
+  }
+  // Verifica se já existe usuário com o mesmo username
+  const exists = users.some((u) => u.username === username);
+  if (exists) {
+    return res.status(409).json({ error: 'Nome de usuário já existe' });
+  }
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password: bcrypt.hashSync(password, 8),
+  };
+  users.push(newUser);
+  res.status(201).json({ message: 'Usuário registrado com sucesso' });
+});
+
+// Rota de logout (simulada)
+// No JWT, o logout é feito no frontend descartando o token. Esta rota existe apenas para fins didáticos.
+app.post('/logout', (req, res) => {
+  // No backend stateless, basta o frontend descartar o token.
+  res.json({
+    message: 'Logout simulado: basta descartar o token no frontend.',
+  });
+});
+
 // Usa as rotas de tarefas para requisições que começam com /tasks
 app.use('/tasks', authMiddleware, taskRoutes); // Rotas protegidas por autenticação
 
