@@ -1,9 +1,9 @@
 // Importa o supertest para testar as rotas HTTP
-const request = require('supertest');
+import request from 'supertest';
 // Importa o app Express
-const app = require('../app');
+import app from '../app.js';
 // Importa função para resetar tarefas
-const { resetTasks } = require('../controllers/tasks');
+import { resetTasks } from '../controllers/tasks.js';
 
 let token;
 
