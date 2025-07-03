@@ -35,6 +35,7 @@ Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 
 ```
 JWT_SECRET=SEGREDO_SUPER_SECRETO
+PORT=3000
 ```
 
 ## ▶️ Executando o servidor
@@ -71,6 +72,11 @@ Os testes cobrem casos de sucesso e erro para as rotas de tarefas, autenticaçã
 ## 📄 Documentação
 
 Veja o arquivo [`docs.md`](./docs.md) para detalhes completos das rotas, exemplos de payload e respostas.
+
+## 📄 Documentação Swagger
+
+Acesse a documentação interativa em:  
+[http://localhost:3000/api-docs](http://localhost:3000/api-docs)
 
 ## 💻 Projeto no GitHub
 
