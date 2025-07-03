@@ -1,3 +1,7 @@
+/**
+ * Arquivo principal da aplicação.
+ * Inicializa o servidor Express, configura middlewares, rotas e tratamento de erros.
+ */
 // Carrega variáveis de ambiente do arquivo .env
 import 'dotenv/config'; // Importa variáveis de ambiente
 // Importa o framework Express
@@ -22,13 +26,20 @@ app.use(cors()); // Aplica o middleware CORS
 // Permite que a aplicação entenda JSON no corpo das requisições
 app.use(bodyParser.json()); // Aplica o middleware body-parser
 
-// Mock de usuários (em memória)
+/**
+ * Mock de usuários em memória para autenticação e testes.
+ * Cada usuário possui: id, username, password (hash).
+ * @type {Array<Object>}
+ */
 const users = [
   { id: 1, username: 'admin', password: bcrypt.hashSync('senha123', 8) }, // Usuário admin
   { id: 2, username: 'user', password: bcrypt.hashSync('senha123', 8) }, // Usuário comum
 ];
 
-// Rota de login (deve vir antes das rotas de tasks)
+/**
+ * Rota de login.
+ * Autentica usuário e retorna um token JWT se as credenciais forem válidas.
+ */
 app.post('/login', (req, res) => {
   const { username, password } = req.body; // Extrai usuário e senha do corpo
   // Validação básica dos campos
@@ -46,7 +57,10 @@ app.post('/login', (req, res) => {
   res.json({ token }); // Retorna token
 });
 
-// Rota de registro de usuário (simulada)
+/**
+ * Rota de registro de usuário.
+ * Registra um novo usuário se o username não existir.
+ */
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
@@ -66,8 +80,10 @@ app.post('/register', (req, res) => {
   res.status(201).json({ message: 'Usuário registrado com sucesso' });
 });
 
-// Rota de logout (simulada)
-// No JWT, o logout é feito no frontend descartando o token. Esta rota existe apenas para fins didáticos.
+/**
+ * Rota de logout (simulada).
+ * No JWT, o logout é feito no frontend descartando o token.
+ */
 app.post('/logout', (req, res) => {
   // No backend stateless, basta o frontend descartar o token.
   res.json({
@@ -75,10 +91,16 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// Usa as rotas de tarefas para requisições que começam com /tasks
+/**
+ * Middleware de autenticação aplicado às rotas de tarefas.
+ * Protege as rotas de /tasks.
+ */
 app.use('/tasks', authMiddleware, taskRoutes); // Rotas protegidas por autenticação
 
-// Inicia o servidor apenas se este arquivo for executado diretamente
+/**
+ * Inicialização do servidor Express.
+ * Só executa se este arquivo for chamado diretamente.
+ */
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   // Define a porta (usa a porta do ambiente ou 3000 por padrão)
   const PORT = process.env.PORT || 3000; // Porta do servidor
@@ -89,5 +111,8 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
 // Exporta o app para ser usado em outros arquivos (como nos testes)
 export default app; // Exportação para testes
 
-// Middleware de tratamento global de erros (deve ser o último)
+/**
+ * Middleware global de tratamento de erros.
+ * Deve ser o último middleware registrado.
+ */
 app.use(errorHandler); // Aplica middleware de erro

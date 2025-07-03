@@ -206,6 +206,5 @@ export function resetTasks() {
       priority: 'media',
     },
   ];
-  nextId = 5; // Reseta ID
-  logger.info('Todas as tarefas foram resetadas para o estado inicial.');
+  nextId = 5;
 }

@@ -79,7 +79,7 @@ Veja o arquivo [`docs.md`](./docs.md) para detalhes completos das rotas, exemplo
 ## 👤 Autor
 
 Gilberto Pacce  
-[LinkedIn](https://www.linkedin.com/in/seu-linkedin) | [GitHub](https://github.com/gibapacce)
+[LinkedIn](https://www.linkedin.com/in/gilberto-pacce) | [GitHub](https://github.com/gibapacce)
 
 ---
 
