@@ -17,15 +17,165 @@ function validateId(req, res, next) {
   next(); // Continua se válido
 }
 
-// Rota para buscar todas as tarefas
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Retorna todas as tarefas
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: completed
+ *         schema:
+ *           type: boolean
+ *         description: Filtra tarefas por status de conclusão
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Busca por palavra-chave no título ou descrição
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Página para paginação
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Limite de itens por página
+ *     responses:
+ *       200:
+ *         description: Lista de tarefas
+ */
 router.get('/', getAllTasks); // GET /tasks
-// Rota para criar uma nova tarefa
+
+/**
+ * @swagger
+ * /tasks:
+ *   post:
+ *     summary: Cria uma nova tarefa
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Título da tarefa
+ *               description:
+ *                 type: string
+ *                 description: Descrição da tarefa
+ *               priority:
+ *                 type: string
+ *                 enum: [baixa, media, alta]
+ *                 description: Prioridade da tarefa
+ *     responses:
+ *       201:
+ *         description: Tarefa criada com sucesso
+ *       400:
+ *         description: Dados inválidos
+ */
 router.post('/', createTask); // POST /tasks
-// Rota para buscar uma tarefa pelo id
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     summary: Busca uma tarefa pelo ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da tarefa
+ *     responses:
+ *       200:
+ *         description: Tarefa encontrada
+ *       400:
+ *         description: ID inválido
+ *       404:
+ *         description: Tarefa não encontrada
+ */
 router.get('/:id', validateId, getTaskById); // GET /tasks/:id
-// Rota para atualizar uma tarefa pelo id
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   patch:
+ *     summary: Atualiza uma tarefa pelo ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da tarefa
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               completed:
+ *                 type: boolean
+ *               priority:
+ *                 type: string
+ *                 enum: [baixa, media, alta]
+ *     responses:
+ *       200:
+ *         description: Tarefa atualizada com sucesso
+ *       400:
+ *         description: Dados inválidos ou ID inválido
+ *       404:
+ *         description: Tarefa não encontrada
+ */
 router.patch('/:id', validateId, updateTask); // PATCH /tasks/:id
-// Rota para deletar uma tarefa pelo id
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     summary: Remove uma tarefa pelo ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da tarefa
+ *     responses:
+ *       200:
+ *         description: Tarefa removida com sucesso
+ *       400:
+ *         description: ID inválido
+ *       404:
+ *         description: Tarefa não encontrada
+ */
 router.delete('/:id', validateId, deleteTask); // DELETE /tasks/:id
 
 export default router; // Exporta o roteador

@@ -18,6 +18,7 @@ import bcrypt from 'bcryptjs'; // Biblioteca para hash de senhas
 import authMiddleware from './middleware/auth.js'; // Middleware de autenticação
 import errorHandler from './middleware/errorHandler.js'; // Middleware de tratamento de erros
 import logger from './utils/logger.js'; // Logger customizado
+import { swaggerUi, swaggerSpec } from './swagger.js';
 
 // Cria uma instância do aplicativo Express
 const app = express(); // Inicializa o app
@@ -37,8 +38,34 @@ const users = [
 ];
 
 /**
- * Rota de login.
- * Autentica usuário e retorna um token JWT se as credenciais forem válidas.
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Realiza login do usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Nome de usuário
+ *               password:
+ *                 type: string
+ *                 description: Senha do usuário
+ *     responses:
+ *       200:
+ *         description: Login realizado com sucesso, retorna o token JWT
+ *       400:
+ *         description: Usuário e senha são obrigatórios
+ *       401:
+ *         description: Credenciais inválidas
  */
 app.post('/login', (req, res) => {
   const { username, password } = req.body; // Extrai usuário e senha do corpo
@@ -58,8 +85,34 @@ app.post('/login', (req, res) => {
 });
 
 /**
- * Rota de registro de usuário.
- * Registra um novo usuário se o username não existir.
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Registra um novo usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Nome de usuário
+ *               password:
+ *                 type: string
+ *                 description: Senha do usuário
+ *     responses:
+ *       201:
+ *         description: Usuário registrado com sucesso
+ *       400:
+ *         description: Usuário e senha são obrigatórios
+ *       409:
+ *         description: Nome de usuário já existe
  */
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
@@ -81,8 +134,14 @@ app.post('/register', (req, res) => {
 });
 
 /**
- * Rota de logout (simulada).
- * No JWT, o logout é feito no frontend descartando o token.
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout do usuário (simulado)
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout simulado realizado com sucesso
  */
 app.post('/logout', (req, res) => {
   // No backend stateless, basta o frontend descartar o token.
@@ -101,12 +160,8 @@ app.use('/tasks', authMiddleware, taskRoutes); // Rotas protegidas por autentica
  * Inicialização do servidor Express.
  * Só executa se este arquivo for chamado diretamente.
  */
-if (process.argv[1] === new URL(import.meta.url).pathname) {
-  // Define a porta (usa a porta do ambiente ou 3000 por padrão)
-  const PORT = process.env.PORT || 3000; // Porta do servidor
-  // Inicia o servidor e exibe uma mensagem no console
-  app.listen(PORT, () => logger.info(`[App] Servidor iniciado na porta ${PORT}`)); // Inicializa servidor
-}
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => logger.info(`[App] Servidor iniciado na porta ${PORT}`));
 
 // Exporta o app para ser usado em outros arquivos (como nos testes)
 export default app; // Exportação para testes
@@ -116,3 +171,5 @@ export default app; // Exportação para testes
  * Deve ser o último middleware registrado.
  */
 app.use(errorHandler); // Aplica middleware de erro
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
