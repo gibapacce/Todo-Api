@@ -111,7 +111,10 @@ export function createTask(req, res) {
     priority: value.priority, // Prioridade
   };
   tasks.push(newTask); // Adiciona ao array
-  logger.info(`Tarefa criada: ${JSON.stringify(newTask)}`); // Loga criação
+  logger.info(
+    `Tarefa criada com sucesso | id=${newTask.id}, title="${newTask.title}"`,
+    { tarefa: newTask }
+  );
   res.status(201).json(newTask); // Retorna tarefa criada
 }
 
@@ -136,7 +139,10 @@ export function updateTask(req, res) {
     task.completed = value.completed; // Atualiza status
   }
   if (value.priority !== undefined) task.priority = value.priority; // Atualiza prioridade
-  logger.info(`Tarefa atualizada: ${JSON.stringify(task)}`); // Loga atualização
+  logger.info(
+    `Tarefa atualizada com sucesso | id=${task.id}, title="${task.title}"`,
+    { tarefa: task }
+  );
   res.json(task); // Retorna tarefa atualizada
 }
 
@@ -146,7 +152,7 @@ export function deleteTask(req, res) {
   const exists = tasks.some((t) => t.id === parseInt(id)); // Verifica existência
   if (!exists) return res.status(404).json({ error: 'Tarefa não encontrada.' }); // Não achou
   tasks = tasks.filter((t) => t.id !== parseInt(id)); // Remove do array
-  logger.info(`Tarefa removida: id=${id}`); // Loga remoção
+  logger.info(`Tarefa removida com sucesso | id=${id}`);
   res.json({ message: 'Tarefa removida com sucesso.' }); // Mensagem de sucesso
 }
 
@@ -201,5 +207,5 @@ export function resetTasks() {
     },
   ];
   nextId = 5; // Reseta ID
-  logger.info('Tarefas resetadas para o estado inicial.'); // Loga reset
+  logger.info('Todas as tarefas foram resetadas para o estado inicial.');
 }

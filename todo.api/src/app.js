@@ -83,7 +83,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   // Define a porta (usa a porta do ambiente ou 3000 por padrão)
   const PORT = process.env.PORT || 3000; // Porta do servidor
   // Inicia o servidor e exibe uma mensagem no console
-  app.listen(PORT, () => logger.info(`Server is running on port ${PORT}`)); // Inicializa servidor
+  app.listen(PORT, () => logger.info(`[App] Servidor iniciado na porta ${PORT}`)); // Inicializa servidor
 }
 
 // Exporta o app para ser usado em outros arquivos (como nos testes)
