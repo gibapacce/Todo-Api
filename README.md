@@ -35,6 +35,7 @@ Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 
 ```
 JWT_SECRET=SEGREDO_SUPER_SECRETO
+PORT=3000
 ```
 
 ## ▶️ Executando o servidor
@@ -72,6 +73,11 @@ Os testes cobrem casos de sucesso e erro para as rotas de tarefas, autenticaçã
 
 Veja o arquivo [`docs.md`](./docs.md) para detalhes completos das rotas, exemplos de payload e respostas.
 
+## 📄 Documentação Swagger
+
+Acesse a documentação interativa em:  
+[http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+
 ## 💻 Projeto no GitHub
 
 [https://github.com/gibapacce/todo-api-nodejs](https://github.com/gibapacce/todo-api-nodejs)
@@ -79,7 +85,7 @@ Veja o arquivo [`docs.md`](./docs.md) para detalhes completos das rotas, exemplo
 ## 👤 Autor
 
 Gilberto Pacce  
-[LinkedIn](https://www.linkedin.com/in/seu-linkedin) | [GitHub](https://github.com/gibapacce)
+[LinkedIn](https://www.linkedin.com/in/gilberto-pacce) | [GitHub](https://github.com/gibapacce)
 
 ---
 
